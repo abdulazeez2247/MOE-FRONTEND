@@ -356,6 +356,7 @@
 // };
 
 // export default ChatInterface;
+// components/ChatInterface.js
 import React, { useState, useRef, useEffect } from "react";
 import { questionsAPI } from "../services/api";
 
@@ -364,7 +365,6 @@ const ChatInterface = ({ userPlan = "free", onUpgradeClick }) => {
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
-  const inputRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -374,14 +374,9 @@ const ChatInterface = ({ userPlan = "free", onUpgradeClick }) => {
     scrollToBottom();
   }, [messages]);
 
-  // Auto-focus input on mount and after messages
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, [messages]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!inputMessage.trim() || isLoading) return;
+    if (!inputMessage.trim()) return;
 
     const userMessage = {
       id: Date.now(),
@@ -460,38 +455,30 @@ const ChatInterface = ({ userPlan = "free", onUpgradeClick }) => {
     if (userPlan !== "free") return null;
 
     return (
-      <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mx-4 mb-4 lg:mx-6">
-        <div className="flex flex-col sm:flex-row sm:items-start">
-          <div className="flex-shrink-0 flex items-start mb-2 sm:mb-0 sm:mr-3">
-            <svg
-              className="h-5 w-5 text-yellow-400 mt-0.5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                clipRule="evenodd"
-              />
+      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4 mx-4 md:mx-6">
+        <div className="flex">
+          <div className="flex-shrink-0">
+            <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
             </svg>
           </div>
-          <div className="flex-1">
-            <h3 className="text-sm font-medium text-yellow-800 mb-1">
+          <div className="ml-3 flex-1">
+            <h3 className="text-sm font-medium text-yellow-800">
               Upgrade to Pro for Enhanced Features
             </h3>
-            <div className="text-sm text-yellow-700 mb-3">
-              <p className="text-xs sm:text-sm">
-                Pro answers include Mozaik menu paths step-by-step, joinery and
-                CNC checks, and install notes. Free answers are brief and
-                generic.
+            <div className="mt-2 text-sm text-yellow-700">
+              <p className="text-balance">
+                Pro answers include Mozaik menu paths step-by-step, joinery and CNC checks, and install notes. Free answers are brief and generic.
               </p>
             </div>
-            <button
-              onClick={onUpgradeClick}
-              className="w-full sm:w-auto bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-700 transition-colors duration-200"
-            >
-              Upgrade Now
-            </button>
+            <div className="mt-4">
+              <button
+                onClick={onUpgradeClick}
+                className="bg-yellow-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-yellow-700 transition-colors"
+              >
+                Upgrade Now
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -502,10 +489,10 @@ const ChatInterface = ({ userPlan = "free", onUpgradeClick }) => {
     if (message.upgradeRequired) {
       return (
         <div>
-          <p className="text-sm sm:text-base">{message.text}</p>
+          <p className="text-balance">{message.text}</p>
           <button
             onClick={onUpgradeClick}
-            className="mt-3 bg-primary-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-primary-700 transition-colors duration-200 w-full sm:w-auto"
+            className="mt-2 bg-primary-600 text-white px-3 py-1 rounded text-sm hover:bg-primary-700 transition-colors"
           >
             Upgrade to Continue
           </button>
@@ -516,23 +503,20 @@ const ChatInterface = ({ userPlan = "free", onUpgradeClick }) => {
     if (message.error) {
       return (
         <div className="text-red-600">
-          <p className="text-sm sm:text-base">{message.text}</p>
+          <p className="text-balance">{message.text}</p>
         </div>
       );
     }
 
     return (
       <div>
-        <p className="text-sm sm:text-base leading-relaxed">{message.text}</p>
+        <p className="text-sm text-balance">{message.text}</p>
         {message.sources && message.sources.length > 0 && (
-          <div className="mt-3">
+          <div className="mt-2">
             <p className="text-xs text-gray-500 mb-1">Sources:</p>
             <ul className="text-xs text-gray-400 space-y-1">
               {message.sources.map((source, index) => (
-                <li key={index} className="flex items-start">
-                  <span className="mr-2 mt-1.5 flex-shrink-0">•</span>
-                  <span className="flex-1">{source}</span>
-                </li>
+                <li key={index}>• {source}</li>
               ))}
             </ul>
           </div>
@@ -541,20 +525,20 @@ const ChatInterface = ({ userPlan = "free", onUpgradeClick }) => {
           <div className="flex flex-wrap gap-2 mt-3">
             <button
               onClick={() => handleVote(message.answerId, "up")}
-              className={`text-xs px-3 py-2 rounded-lg transition-colors duration-200 ${
+              className={`text-xs px-3 py-1.5 rounded transition-colors ${
                 message.userVote === "up"
                   ? "bg-green-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
               }`}
             >
               👍 Helpful
             </button>
             <button
               onClick={() => handleVote(message.answerId, "down")}
-              className={`text-xs px-3 py-2 rounded-lg transition-colors duration-200 ${
+              className={`text-xs px-3 py-1.5 rounded transition-colors ${
                 message.userVote === "down"
                   ? "bg-red-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
               }`}
             >
               👎 Not Helpful
@@ -566,58 +550,36 @@ const ChatInterface = ({ userPlan = "free", onUpgradeClick }) => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-gray-50 to-white safe-area-inset">
-      {/* Header - Mobile Optimized */}
-      <div className="bg-white border-b border-gray-200 px-4 py-4 shadow-sm sm:px-6 sm:py-6">
-        <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
-          <div className="flex items-center justify-between sm:block">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl flex items-center justify-center sm:w-12 sm:h-12">
-                <svg className="w-5 h-5 text-primary-600 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">
-                  <span className="bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
-                    Moe Chat
-                  </span>
-                </h1>
-              </div>
-            </div>
-            
-            {/* Mobile Upgrade Button */}
-            {userPlan === "free" && (
-              <button
-                onClick={onUpgradeClick}
-                className="sm:hidden bg-primary-600 text-white px-3 py-2 rounded-lg text-xs font-semibold hover:bg-primary-700 transition-colors duration-200"
-              >
-                Upgrade
-              </button>
-            )}
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2 sm:space-x-4">
-              <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium sm:px-3 sm:py-1 sm:text-sm ${
+    <div className="flex flex-col h-screen bg-gradient-to-br from-gray-50 to-white">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 px-4 md:px-6 py-4 md:py-6 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+          <div className="flex-1">
+            <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-1">
+              <span className="bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
+                Moe Chat
+              </span>
+            </h1>
+            <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+              <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
                 userPlan === "free" 
                   ? "bg-yellow-100 text-yellow-800" 
                   : "bg-green-100 text-green-800"
               }`}>
                 {userPlan === "free"
-                  ? "Free Plan"
+                  ? "Free Plan (5 queries/day)"
                   : `${userPlan.charAt(0).toUpperCase() + userPlan.slice(1)} Plan`}
               </span>
-              <span className="text-xs text-gray-500 sm:text-sm">
-                {userPlan === "free" ? "gpt-4o-mini" : "gpt-4o"}
+              <span className="text-xs md:text-sm text-gray-500">
+                Model: {userPlan === "free" ? "gpt-4o-mini" : "gpt-4o"}
               </span>
             </div>
-            
-            {/* Desktop Upgrade Button */}
+          </div>
+          <div className="flex items-center space-x-4">
             {userPlan === "free" && (
               <button
                 onClick={onUpgradeClick}
-                className="hidden sm:block bg-gradient-to-r from-primary-600 to-primary-700 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:from-primary-700 hover:to-primary-800 transition-all duration-200 shadow-lg hover:shadow-xl ml-4"
+                className="btn btn-primary btn-sm"
               >
                 Upgrade to Pro
               </button>
@@ -627,16 +589,18 @@ const ChatInterface = ({ userPlan = "free", onUpgradeClick }) => {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-4 sm:px-6 sm:py-6 sm:space-y-6">
+      <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 space-y-4 custom-scrollbar">
         {messages.length === 0 && (
-          <div className="text-center mt-8 sm:mt-16 px-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:w-20 sm:h-20 sm:rounded-3xl sm:mb-6">
-              <svg className="w-8 h-8 text-primary-600 sm:w-10 sm:h-10" fill="currentColor" viewBox="0 0 20 20">
+          <div className="text-center mt-8 md:mt-16">
+            <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl md:rounded-3xl flex items-center justify-center mx-auto mb-4 md:mb-6">
+              <svg className="w-8 h-8 md:w-10 md:h-10 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2 sm:text-xl">Start a conversation with Moe</h3>
-            <p className="text-gray-600 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
+            <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2 text-balance">
+              Start a conversation with Moe
+            </h3>
+            <p className="text-gray-600 max-w-md mx-auto text-balance text-sm md:text-base">
               Ask questions about Mozaik, VCarve, Fusion 360, or any millwork project. Get expert guidance instantly.
             </p>
           </div>
@@ -650,7 +614,7 @@ const ChatInterface = ({ userPlan = "free", onUpgradeClick }) => {
             }`}
           >
             <div
-              className={`max-w-[85%] sm:max-w-2xl px-4 py-3 rounded-2xl shadow-sm sm:px-6 sm:py-4 ${
+              className={`max-w-[85%] md:max-w-2xl px-4 py-3 md:px-6 md:py-4 rounded-2xl shadow-sm ${
                 message.sender === "user"
                   ? "bg-gradient-to-r from-primary-600 to-primary-700 text-white"
                   : "bg-white border border-gray-200 text-gray-900"
@@ -658,7 +622,7 @@ const ChatInterface = ({ userPlan = "free", onUpgradeClick }) => {
             >
               {renderMessageContent(message)}
               <div
-                className={`text-xs mt-2 flex items-center flex-wrap gap-x-2 ${
+                className={`text-xs mt-2 flex items-center flex-wrap ${
                   message.sender === "user"
                     ? "text-primary-100"
                     : "text-gray-500"
@@ -666,14 +630,14 @@ const ChatInterface = ({ userPlan = "free", onUpgradeClick }) => {
               >
                 <span>{message.timestamp}</span>
                 {message.sender === "bot" && message.modelUsed && (
-                  <span className="flex items-center">
-                    <span className="w-1 h-1 bg-current rounded-full mr-1 opacity-60"></span>
+                  <span className="ml-2 flex items-center">
+                    <span className="w-1 h-1 bg-current rounded-full mr-2"></span>
                     {message.modelUsed}
                   </span>
                 )}
                 {message.sender === "bot" && message.isCacheHit && (
-                  <span className="flex items-center">
-                    <span className="w-1 h-1 bg-current rounded-full mr-1 opacity-60"></span>
+                  <span className="ml-2 flex items-center">
+                    <span className="w-1 h-1 bg-current rounded-full mr-2"></span>
                     Cached
                   </span>
                 )}
@@ -684,18 +648,12 @@ const ChatInterface = ({ userPlan = "free", onUpgradeClick }) => {
 
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-white border border-gray-200 px-4 py-3 rounded-2xl shadow-sm sm:px-6 sm:py-4 max-w-[85%] sm:max-w-2xl">
+            <div className="bg-white border border-gray-200 px-4 py-3 md:px-6 md:py-4 rounded-2xl shadow-sm">
               <div className="flex items-center space-x-2">
                 <div className="flex space-x-1">
                   <div className="w-2 h-2 bg-primary-400 rounded-full animate-bounce"></div>
-                  <div
-                    className="w-2 h-2 bg-primary-400 rounded-full animate-bounce"
-                    style={{ animationDelay: "0.1s" }}
-                  ></div>
-                  <div
-                    className="w-2 h-2 bg-primary-400 rounded-full animate-bounce"
-                    style={{ animationDelay: "0.2s" }}
-                  ></div>
+                  <div className="w-2 h-2 bg-primary-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
+                  <div className="w-2 h-2 bg-primary-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
                 </div>
                 <span className="text-sm text-gray-500">Moe is thinking...</span>
               </div>
@@ -709,56 +667,40 @@ const ChatInterface = ({ userPlan = "free", onUpgradeClick }) => {
       {/* Upgrade Prompt */}
       {userPlan === "free" && messages.length > 0 && getUpgradePrompt()}
 
-      {/* Input Area - Mobile Optimized */}
-      <div className="bg-white border-t border-gray-200 px-3 py-4 shadow-lg sm:px-6 sm:py-6 safe-area-inset-bottom">
-        <form onSubmit={handleSubmit} className="flex space-x-3 sm:space-x-4">
+      {/* Input Area */}
+      <div className="bg-white border-t border-gray-200 px-4 md:px-6 py-4 shadow-lg">
+        <form onSubmit={handleSubmit} className="flex space-x-3 md:space-x-4">
           <div className="flex-1 relative">
             <input
-              ref={inputRef}
               type="text"
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               placeholder="Ask Moe about your millwork project..."
-              className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-3 focus:ring-primary-100 focus:border-primary-500 transition-all duration-200 shadow-sm sm:rounded-2xl sm:px-6 sm:py-4 sm:text-lg"
+              className="w-full border-2 border-gray-200 rounded-xl md:rounded-2xl px-4 md:px-6 py-3 md:py-4 text-sm md:text-base focus:outline-none focus:ring-4 focus:ring-primary-100 focus:border-primary-500 transition-all duration-200 shadow-sm"
               disabled={isLoading}
-              maxLength={500}
             />
-            {inputMessage.length > 0 && (
-              <div className="absolute -top-2 right-2 bg-primary-500 text-white text-xs px-2 py-1 rounded-full">
-                {inputMessage.length}/500
-              </div>
-            )}
           </div>
           <button
             type="submit"
             disabled={isLoading || !inputMessage.trim()}
-            className="bg-gradient-to-r from-primary-600 to-primary-700 text-white px-4 py-3 rounded-xl font-semibold hover:from-primary-700 hover:to-primary-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl disabled:shadow-sm flex items-center justify-center min-w-[80px] sm:min-w-[100px] sm:px-6 sm:py-4 sm:rounded-2xl"
+            className="btn btn-primary px-6 md:px-8 py-3 md:py-4 rounded-xl md:rounded-2xl font-semibold text-sm md:text-base"
           >
             {isLoading ? (
               <div className="flex items-center">
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white sm:h-5 sm:w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 md:h-5 md:w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                <span className="hidden sm:inline">Sending</span>
+                <span className="hidden sm:inline">Sending...</span>
               </div>
             ) : (
-              <>
-                <span className="hidden sm:inline">Send</span>
-                <svg className="w-5 h-5 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                </svg>
-              </>
+              <span className="hidden sm:inline">Send</span>
             )}
+            <svg className="sm:hidden w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
           </button>
         </form>
-        
-        {/* Character count for mobile */}
-        {inputMessage.length > 0 && (
-          <div className="text-xs text-gray-500 text-center mt-2 sm:hidden">
-            {inputMessage.length}/500 characters
-          </div>
-        )}
       </div>
     </div>
   );
