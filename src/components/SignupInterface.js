@@ -319,4 +319,4 @@ const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
 };
 
 export default SignupInterface;
-components/SignupInterface.js
+
