@@ -1,325 +1,3 @@
-// import React, { useState } from 'react';
-// import { authAPI, setAuthToken } from '../services/api';
-
-// const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
-//   const [formData, setFormData] = useState({
-//     name: '',
-//     email: '',
-//     username: '',
-//     password: '',
-//     confirmPassword: ''
-//   });
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [showPassword, setShowPassword] = useState(false);
-//   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-//   const [errors, setErrors] = useState({});
-
-//   const handleInputChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData(prev => ({
-//       ...prev,
-//       [name]: value
-//     }));
-    
-//     if (errors[name]) {
-//       setErrors(prev => ({
-//         ...prev,
-//         [name]: ''
-//       }));
-//     }
-//   };
-
-//   const validateForm = () => {
-//     const newErrors = {};
-
-//     if (!formData.name.trim()) {
-//       newErrors.name = 'Name is required';
-//     }
-
-//     if (!formData.email.trim()) {
-//       newErrors.email = 'Email is required';
-//     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-//       newErrors.email = 'Please enter a valid email address';
-//     }
-
-//     if (!formData.username.trim()) {
-//       newErrors.username = 'Username is required';
-//     } else if (formData.username.length < 3) {
-//       newErrors.username = 'Username must be at least 3 characters long';
-//     }
-
-//     if (!formData.password) {
-//       newErrors.password = 'Password is required';
-//     } else if (formData.password.length < 8) {
-//       newErrors.password = 'Password must be at least 8 characters long';
-//     }
-
-//     if (!formData.confirmPassword) {
-//       newErrors.confirmPassword = 'Please confirm your password';
-//     } else if (formData.password !== formData.confirmPassword) {
-//       newErrors.confirmPassword = 'Passwords do not match';
-//     }
-
-//     setErrors(newErrors);
-//     return Object.keys(newErrors).length === 0;
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-    
-//     if (!validateForm()) {
-//       return;
-//     }
-
-//     setIsLoading(true);
-
-//     try {
-//       const response = await authAPI.signup({
-//         email: formData.email,
-//         password: formData.password
-//       });
-      
-//       setAuthToken(response.data.accessToken);
-//       onSignup(response.data.user);
-      
-//     } catch (error) {
-//       if (error.response?.data?.message) {
-//         setErrors({ submit: error.response.data.message });
-//       } else {
-//         setErrors({ submit: 'Signup failed. Please try again.' });
-//       }
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-//       <div className="max-w-md w-full space-y-8">
-//         <div className="text-center">
-//           <button
-//             onClick={onBack}
-//             className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-6 transition-colors font-medium text-sm"
-//           >
-//             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-//             </svg>
-//             Back
-//           </button>
-//           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-//             Create Account
-//           </h1>
-//           <p className="text-sm text-gray-600">
-//             Join MOE and start your millwork journey
-//           </p>
-//         </div>
-
-//         <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
-//           <form onSubmit={handleSubmit} className="space-y-6">
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-2">
-//                 Full Name
-//               </label>
-//               <input
-//                 type="text"
-//                 name="name"
-//                 value={formData.name}
-//                 onChange={handleInputChange}
-//                 placeholder="Enter your full name"
-//                 className={`w-full px-4 py-3 text-sm border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 ${
-//                   errors.name ? 'border-red-300' : 'border-gray-300'
-//                 }`}
-//                 required
-//               />
-//               {errors.name && (
-//                 <p className="mt-1 text-xs text-red-600">{errors.name}</p>
-//               )}
-//             </div>
-
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-2">
-//                 Email Address
-//               </label>
-//               <input
-//                 type="email"
-//                 name="email"
-//                 value={formData.email}
-//                 onChange={handleInputChange}
-//                 placeholder="Enter your email"
-//                 className={`w-full px-4 py-3 text-sm border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 ${
-//                   errors.email ? 'border-red-300' : 'border-gray-300'
-//                 }`}
-//                 required
-//               />
-//               {errors.email && (
-//                 <p className="mt-1 text-xs text-red-600">{errors.email}</p>
-//               )}
-//             </div>
-
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-2">
-//                 Username
-//               </label>
-//               <input
-//                 type="text"
-//                 name="username"
-//                 value={formData.username}
-//                 onChange={handleInputChange}
-//                 placeholder="Choose a username"
-//                 className={`w-full px-4 py-3 text-sm border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 ${
-//                   errors.username ? 'border-red-300' : 'border-gray-300'
-//                 }`}
-//                 required
-//               />
-//               {errors.username && (
-//                 <p className="mt-1 text-xs text-red-600">{errors.username}</p>
-//               )}
-//             </div>
-
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-2">
-//                 Password
-//               </label>
-//               <div className="relative">
-//                 <input
-//                   type={showPassword ? "text" : "password"}
-//                   name="password"
-//                   value={formData.password}
-//                   onChange={handleInputChange}
-//                   placeholder="Create a password"
-//                   className={`w-full px-4 py-3 text-sm border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 pr-10 ${
-//                     errors.password ? 'border-red-300' : 'border-gray-300'
-//                   }`}
-//                   required
-//                 />
-//                 <button
-//                   type="button"
-//                   onClick={() => setShowPassword(!showPassword)}
-//                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-//                 >
-//                   {showPassword ? (
-//                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
-//                     </svg>
-//                   ) : (
-//                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-//                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-//                     </svg>
-//                   )}
-//                 </button>
-//               </div>
-//               {errors.password && (
-//                 <p className="mt-1 text-xs text-red-600">{errors.password}</p>
-//               )}
-//             </div>
-
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-2">
-//                 Confirm Password
-//               </label>
-//               <div className="relative">
-//                 <input
-//                   type={showConfirmPassword ? "text" : "password"}
-//                   name="confirmPassword"
-//                   value={formData.confirmPassword}
-//                   onChange={handleInputChange}
-//                   placeholder="Confirm your password"
-//                   className={`w-full px-4 py-3 text-sm border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 pr-10 ${
-//                     errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
-//                   }`}
-//                   required
-//                 />
-//                 <button
-//                   type="button"
-//                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-//                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-//                 >
-//                   {showConfirmPassword ? (
-//                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
-//                     </svg>
-//                   ) : (
-//                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-//                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-//                     </svg>
-//                   )}
-//                 </button>
-//               </div>
-//               {errors.confirmPassword && (
-//                 <p className="mt-1 text-xs text-red-600">{errors.confirmPassword}</p>
-//               )}
-//             </div>
-
-//             {errors.submit && (
-//               <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-//                 <p className="text-red-600 text-center text-sm">{errors.submit}</p>
-//               </div>
-//             )}
-
-//             <button
-//               type="submit"
-//               disabled={isLoading}
-//               className={`w-full py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-200 ${
-//                 isLoading
-//                   ? 'bg-gray-400 cursor-not-allowed'
-//                   : 'bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:from-primary-700 hover:to-primary-800 shadow-md hover:shadow-lg'
-//               }`}
-//             >
-//               {isLoading ? (
-//                 <div className="flex items-center justify-center">
-//                   <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-//                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-//                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-//                   </svg>
-//                   Creating Account...
-//                 </div>
-//               ) : (
-//                 'Create Account'
-//               )}
-//             </button>
-//           </form>
-
-//           <div className="mt-6">
-//             <div className="relative">
-//               <div className="absolute inset-0 flex items-center">
-//                 <div className="w-full border-t border-gray-300"></div>
-//               </div>
-//               <div className="relative flex justify-center text-sm">
-//                 <span className="px-2 bg-white text-gray-500">Already have an account?</span>
-//               </div>
-//             </div>
-//           </div>
-
-//           <button
-//             onClick={onSwitchToLogin}
-//             className="w-full py-3 px-4 rounded-lg font-semibold text-sm border-2 border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white transition-all duration-200 mt-4"
-//           >
-//             Sign In
-//           </button>
-//         </div>
-
-//         <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4">
-//           <div className="flex items-start">
-//             <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-//               <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-//                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-//               </svg>
-//             </div>
-//             <div>
-//               <p className="font-semibold text-green-900 mb-1 text-sm">Free to Start</p>
-//               <p className="text-green-800 text-xs">Create your account for free and start with 5 queries per day.</p>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default SignupInterface;
-// components/SignupInterface.js
 import React, { useState } from 'react';
 import { authAPI, setAuthToken } from '../services/api';
 
@@ -416,30 +94,30 @@ const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center py-8 px-4">
-      <div className="max-w-md w-full space-y-6 md:space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <button
             onClick={onBack}
-            className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-4 md:mb-6 transition-colors font-medium text-sm"
+            className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-6 transition-colors font-medium text-sm"
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Back
           </button>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
             Create Account
           </h1>
-          <p className="text-sm md:text-base text-gray-600">
+          <p className="text-sm text-gray-600">
             Join MOE and start your millwork journey
           </p>
         </div>
 
-        <div className="card p-6 md:p-8">
-          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
-            <div className="form-group">
-              <label className="form-label">
+        <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Full Name
               </label>
               <input
@@ -448,16 +126,18 @@ const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
                 value={formData.name}
                 onChange={handleInputChange}
                 placeholder="Enter your full name"
-                className={`form-input ${errors.name ? 'form-input-error' : ''}`}
+                className={`w-full px-4 py-3 text-sm border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 ${
+                  errors.name ? 'border-red-300' : 'border-gray-300'
+                }`}
                 required
               />
               {errors.name && (
-                <p className="form-error">{errors.name}</p>
+                <p className="mt-1 text-xs text-red-600">{errors.name}</p>
               )}
             </div>
 
-            <div className="form-group">
-              <label className="form-label">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Email Address
               </label>
               <input
@@ -466,16 +146,18 @@ const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
                 value={formData.email}
                 onChange={handleInputChange}
                 placeholder="Enter your email"
-                className={`form-input ${errors.email ? 'form-input-error' : ''}`}
+                className={`w-full px-4 py-3 text-sm border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 ${
+                  errors.email ? 'border-red-300' : 'border-gray-300'
+                }`}
                 required
               />
               {errors.email && (
-                <p className="form-error">{errors.email}</p>
+                <p className="mt-1 text-xs text-red-600">{errors.email}</p>
               )}
             </div>
 
-            <div className="form-group">
-              <label className="form-label">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Username
               </label>
               <input
@@ -484,16 +166,18 @@ const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
                 value={formData.username}
                 onChange={handleInputChange}
                 placeholder="Choose a username"
-                className={`form-input ${errors.username ? 'form-input-error' : ''}`}
+                className={`w-full px-4 py-3 text-sm border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 ${
+                  errors.username ? 'border-red-300' : 'border-gray-300'
+                }`}
                 required
               />
               {errors.username && (
-                <p className="form-error">{errors.username}</p>
+                <p className="mt-1 text-xs text-red-600">{errors.username}</p>
               )}
             </div>
 
-            <div className="form-group">
-              <label className="form-label">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Password
               </label>
               <div className="relative">
@@ -503,21 +187,22 @@ const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
                   value={formData.password}
                   onChange={handleInputChange}
                   placeholder="Create a password"
-                  className={`form-input pr-10 ${errors.password ? 'form-input-error' : ''}`}
+                  className={`w-full px-4 py-3 text-sm border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 pr-10 ${
+                    errors.password ? 'border-red-300' : 'border-gray-300'
+                  }`}
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
                   {showPassword ? (
-                    <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
                     </svg>
                   ) : (
-                    <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
@@ -525,12 +210,12 @@ const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
                 </button>
               </div>
               {errors.password && (
-                <p className="form-error">{errors.password}</p>
+                <p className="mt-1 text-xs text-red-600">{errors.password}</p>
               )}
             </div>
 
-            <div className="form-group">
-              <label className="form-label">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Confirm Password
               </label>
               <div className="relative">
@@ -540,21 +225,22 @@ const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                   placeholder="Confirm your password"
-                  className={`form-input pr-10 ${errors.confirmPassword ? 'form-input-error' : ''}`}
+                  className={`w-full px-4 py-3 text-sm border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 pr-10 ${
+                    errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
+                  }`}
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
                   {showConfirmPassword ? (
-                    <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
                     </svg>
                   ) : (
-                    <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
@@ -562,7 +248,7 @@ const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
                 </button>
               </div>
               {errors.confirmPassword && (
-                <p className="form-error">{errors.confirmPassword}</p>
+                <p className="mt-1 text-xs text-red-600">{errors.confirmPassword}</p>
               )}
             </div>
 
@@ -575,7 +261,11 @@ const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full btn btn-primary"
+              className={`w-full py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-200 ${
+                isLoading
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:from-primary-700 hover:to-primary-800 shadow-md hover:shadow-lg'
+              }`}
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">
@@ -591,7 +281,7 @@ const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
             </button>
           </form>
 
-          <div className="mt-4 md:mt-6">
+          <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300"></div>
@@ -604,7 +294,7 @@ const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
 
           <button
             onClick={onSwitchToLogin}
-            className="w-full btn btn-secondary mt-4"
+            className="w-full py-3 px-4 rounded-lg font-semibold text-sm border-2 border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white transition-all duration-200 mt-4"
           >
             Sign In
           </button>
@@ -629,3 +319,4 @@ const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
 };
 
 export default SignupInterface;
+components/SignupInterface.js
