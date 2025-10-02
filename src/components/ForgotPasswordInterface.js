@@ -213,4 +213,3 @@ const ForgotPasswordInterface = ({ onResetPassword, onSwitchToLogin }) => {
 };
 
 export default ForgotPasswordInterface;
-components/ForgotPasswordInterface.js

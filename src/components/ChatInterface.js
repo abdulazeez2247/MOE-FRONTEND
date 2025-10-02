@@ -356,4 +356,4 @@ const ChatInterface = ({ userPlan = "free", onUpgradeClick }) => {
 };
 
 export default ChatInterface;
-components/ChatInterface.js
+

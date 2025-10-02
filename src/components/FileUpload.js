@@ -268,4 +268,4 @@ const FileUpload = ({ userPlan = 'free', onUpgradeClick }) => {
 };
 
 export default FileUpload;
-components/FileUpload.js
+

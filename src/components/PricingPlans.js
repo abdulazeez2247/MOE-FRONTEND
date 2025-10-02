@@ -259,4 +259,4 @@ const PricingPlans = ({ onPlanSelect }) => {
 };
 
 export default PricingPlans;
-components/PricingPlans.js
+

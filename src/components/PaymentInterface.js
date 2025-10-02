@@ -112,4 +112,4 @@ const PaymentInterface = ({ selectedPlan, onPaymentSuccess, onBackToPricing }) =
 };
 
 export default PaymentInterface;
-components/PaymentInterface.js
+

@@ -40,4 +40,4 @@ const PlanSwitcher = ({ currentPlan, onPlanChange }) => {
 };
 
 export default PlanSwitcher;
-components/PlanSwitcher.js
+
