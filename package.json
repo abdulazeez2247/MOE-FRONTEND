@@ -19,8 +19,12 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+<<<<<<< HEAD
     "eject": "react-scripts eject",
     "dev": "react-scripts start"
+=======
+    "eject": "react-scripts eject"
+>>>>>>> 1be0d99c66dde9d43d928f55247be4b97db17d7b
   },
   "eslintConfig": {
     "extends": [
@@ -41,8 +45,16 @@
     ]
   },
   "devDependencies": {
+<<<<<<< HEAD
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.12"
   }
 }
+=======
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.14"
+  }
+}
+>>>>>>> 1be0d99c66dde9d43d928f55247be4b97db17d7b

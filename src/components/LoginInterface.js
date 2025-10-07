@@ -78,6 +78,7 @@ const LoginInterface = ({ onLogin, onSwitchToSignup, onSwitchToForgotPassword, o
               </label>
               <input
                 type="email"
+                id="email"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
@@ -94,6 +95,7 @@ const LoginInterface = ({ onLogin, onSwitchToSignup, onSwitchToForgotPassword, o
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
+                  id="password"
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}

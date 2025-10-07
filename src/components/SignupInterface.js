@@ -122,6 +122,7 @@ const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
               </label>
               <input
                 type="text"
+                id="name"
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
@@ -142,6 +143,7 @@ const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
               </label>
               <input
                 type="email"
+                id="email"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
@@ -162,6 +164,7 @@ const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
               </label>
               <input
                 type="text"
+                id="username"
                 name="username"
                 value={formData.username}
                 onChange={handleInputChange}
@@ -183,6 +186,7 @@ const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
+                  id="password"
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
@@ -221,6 +225,7 @@ const SignupInterface = ({ onSignup, onSwitchToLogin, onBack }) => {
               <div className="relative">
                 <input
                   type={showConfirmPassword ? "text" : "password"}
+                  id="confirmPassword"
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
